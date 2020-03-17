@@ -1,0 +1,128 @@
+---
+title: "Skin Cancer"
+author: ""
+date: ""
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+
+Problem 1
+```{r}
+setwd("C:/Users/abhis/Downloads/cancer")
+
+library(ggplot2)
+
+skindata <- read.csv("HAM10000_metadata.csv")
+```
+
+
+```{r}
+head(skindata)
+tail(skindata)
+```
+
+```{r}
+skindata$sex
+```
+
+
+```{r}
+
+skindata <- na.omit(skindata)
+skindata$sex
+```
+
+
+```{r}
+skindata$num[skindata$sex == "female"]  <- 0
+skindata$num[skindata$sex == "male"]  <- 1
+
+skindata$newdx[skindata$dx == "bkl"]  <- "harmless"
+skindata$newdx[skindata$dx == "nv"]  <- "harmless"
+skindata$newdx[skindata$dx == "df"]  <- "harmless"
+
+skindata$newdx[skindata$dx == "akiec"]  <- "harm"
+skindata$newdx[skindata$dx == "bcc"]  <- "harm"
+skindata$newdx[skindata$dx == "vasc"]  <- "harm"
+skindata$newdx[skindata$dx == "mel"]  <- "harm"
+
+tail(skindata)
+skindata$num[skindata$sex == "male"]  <- 1
+
+a <- skindata$num[skindata$sex == "female"]
+b <- skindata$age[skindata$sex == "female"]
+
+a <- as.data.frame(a)
+b <- as.data.frame(b)
+
+a <- cbind(a, b)
+a
+
+a <- skindata$num[skindata$sex == "female"]
+b <- skindata$age[skindata$sex == "female"]
+
+a
+b
+
+
+skindata
+```
+
+
+```{r}
+library(ggplot2)
+
+ggplot(skindata, aes(x = skindata$localization, color = skindata$localization)) + geom_bar(fill = "white") + labs(title = "Count - Areas of Localisation", x="Localisation") + coord_flip()
+
+ggplot(skindata, aes(x = skindata$sex, color = skindata$sex)) + geom_bar(fill = "white") + labs(title = "Count - Sex", x="Sex")
+
+ggplot(skindata, aes(x = skindata$age, color = skindata$age)) + geom_bar() + labs(title = "Count - Age", x="Age")
+
+ggplot(skindata) + aes(x = newdx, color= age, fill = age) +  geom_density()
+
+ggplot(skindata) + aes(x = newdx, color= dx) +  geom_bar(fill = "white")
+ggplot(data= skindata, aes(x=age, color = dx, fill = dx)) + geom_density(alpha = .5)
+ggplot(data= skindata, aes(x=age, color = age, fill = sex)) + geom_density(alpha = .5)
+
+
+
+
+
+```
+
+
+```{r}
+
+library(hexbin)
+
+library(dplyr)
+library(tidyverse)
+
+ggplot(skindata) + aes(y = age, x = sex) +  geom_bin2d()+ scale_fill_continuous(type = "viridis") +theme_bw()
+
+
+ggplot(skindata) + aes(x = sex, y = localization) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+ggplot(skindata) + aes(x = dx, y = localization) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+ggplot(skindata) + aes(x = age, y = dx) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+ggplot(skindata) + aes(x = sex, y = dx) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+ggplot(skindata) + aes(x = dx_type, y = localization) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+ggplot(skindata) + aes(x = age, y = dx_type) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+ggplot(skindata) + aes(x = sex, y = dx_type) +  geom_bin2d()+ scale_fill_continuous(type = "viridis")
+
+
+
+
+
+
+
+```
